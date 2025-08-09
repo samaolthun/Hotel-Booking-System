@@ -1,11 +1,13 @@
-"use client"
+// "use client";
 
-import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
+// import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
+// import { cva, type VariantProps } from "class-variance-authority";
+// import { cn } from "@/lib/utils";
 
-const Collapsible = CollapsiblePrimitive.Root
+// const Collapsible = CollapsiblePrimitive.Root;
 
-const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger
+// const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger;
 
-const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent
+// const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent;
 
-export { Collapsible, CollapsibleTrigger, CollapsibleContent }
+// export { Collapsible, CollapsibleTrigger, CollapsibleContent };

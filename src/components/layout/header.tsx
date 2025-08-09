@@ -19,11 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/hooks/use-auth";

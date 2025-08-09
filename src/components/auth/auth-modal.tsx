@@ -1,76 +1,85 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/src/components/ui/dialog"
-import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
-import { Label } from "@/src/components/ui/label"
-import { Separator } from "@/src/components/ui/separator"
-import { useAuth } from "@/src/hooks/use-auth"
-import { useToast } from "@/src/hooks/use-toast"
-
-import type { AuthContextType } from "@/src/components/providers/auth-provider"
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
+import type { AuthContextType } from "@/components/providers/auth-provider";
 
 interface AuthModalProps {
-  isOpen: boolean
-  onClose: () => void
-  mode: "login" | "register"
-  onModeChange: (mode: "login" | "register") => void
+  isOpen: boolean;
+  onClose: () => void;
+  mode: "login" | "register";
+  onModeChange: (mode: "login" | "register") => void;
 }
 
-export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProps) {
+export function AuthModal({
+  isOpen,
+  onClose,
+  mode,
+  onModeChange,
+}: AuthModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-  })
-  const [loading, setLoading] = useState(false)
+  });
+  const [loading, setLoading] = useState(false);
   const auth = useAuth() as AuthContextType;
   const login = auth.login;
   const register = auth.register;
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
       if (mode === "login") {
-        await login(formData.email, formData.password)
+        await login(formData.email, formData.password);
         toast({
           title: "Welcome back!",
           description: "You have successfully logged in.",
-        })
+        });
       } else {
         if (formData.password !== formData.confirmPassword) {
           toast({
             title: "Error",
             description: "Passwords do not match.",
             variant: "destructive",
-          })
-          return
+          });
+          return;
         }
-        await register(formData.name, formData.email, formData.password)
+        await register(formData.name, formData.email, formData.password);
         toast({
           title: "Account created!",
           description: "Your account has been created successfully.",
-        })
+        });
       }
-      onClose()
-      setFormData({ name: "", email: "", password: "", confirmPassword: "" })
+      onClose();
+      setFormData({ name: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSocialAuth = (provider: "google" | "apple") => {
     // Simulate social authentication
@@ -78,20 +87,20 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
       name: `${provider} User`,
       email: `user@${provider}.com`,
       password: "dummy",
-    }
+    };
 
     if (mode === "login") {
-      login(userData.email, userData.password)
+      login(userData.email, userData.password);
     } else {
-      register(userData.name, userData.email, userData.password)
+      register(userData.name, userData.email, userData.password);
     }
 
-    onClose()
+    onClose();
     toast({
       title: `${provider} authentication`,
       description: `Successfully authenticated with ${provider}.`,
-    })
-  }
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -103,7 +112,11 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
         <div className="space-y-4">
           {/* Social Login Buttons */}
           <div className="space-y-2">
-            <Button variant="outline" className="w-full bg-transparent" onClick={() => handleSocialAuth("google")}>
+            <Button
+              variant="outline"
+              className="w-full bg-transparent"
+              onClick={() => handleSocialAuth("google")}
+            >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
@@ -125,8 +138,16 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
               Continue with Google
             </Button>
 
-            <Button variant="outline" className="w-full bg-transparent" onClick={() => handleSocialAuth("apple")}>
-              <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <Button
+              variant="outline"
+              className="w-full bg-transparent"
+              onClick={() => handleSocialAuth("apple")}
+            >
+              <svg
+                className="w-5 h-5 mr-2"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
               </svg>
               Continue with Apple
@@ -148,7 +169,9 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
                   id="name"
                   type="text"
                   value={formData.name}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -160,7 +183,9 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 required
               />
             </div>
@@ -171,7 +196,9 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
                 id="password"
                 type="password"
                 value={formData.password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 required
               />
             </div>
@@ -183,7 +210,12 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
                   id="confirmPassword"
                   type="password"
                   value={formData.confirmPassword}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
@@ -195,11 +227,15 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
           </form>
 
           <p className="text-center text-sm text-muted-foreground">
-            {mode === "login" ? "Don't have an account? " : "Already have an account? "}
+            {mode === "login"
+              ? "Don't have an account? "
+              : "Already have an account? "}
             <Button
               variant="link"
               className="p-0 h-auto"
-              onClick={() => onModeChange(mode === "login" ? "register" : "login")}
+              onClick={() =>
+                onModeChange(mode === "login" ? "register" : "login")
+              }
             >
               {mode === "login" ? "Sign up" : "Login"}
             </Button>
@@ -207,5 +243,5 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

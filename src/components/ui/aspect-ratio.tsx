@@ -1,7 +1,9 @@
-"use client"
+// "use client";
 
-import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio"
+// import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio";
+// import { cva, type VariantProps } from "class-variance-authority";
+// import { cn } from "@/lib/utils";
 
-const AspectRatio = AspectRatioPrimitive.Root
+// const AspectRatio = AspectRatioPrimitive.Root;
 
-export { AspectRatio }
+// export { AspectRatio };

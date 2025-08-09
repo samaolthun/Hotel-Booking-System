@@ -3,14 +3,20 @@
 import type React from "react";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import type { User } from "@/lib/types";
 
-export interface AuthContextType {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "user" | "admin" | "owner";
+}
+
+interface AuthContextType {
   user: User | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
-  loading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -22,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user session
+    // Check localStorage for existing user
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -32,50 +38,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     // Simulate API call
-    let role: "customer" | "owner" | "admin" = "customer";
-    if (email === "admin@gmail.com") {
-      role = "admin";
-    } else {
-      // Check if email is in approved owners
-      const approvedOwners = JSON.parse(
-        localStorage.getItem("approvedOwners") || "[]"
-      );
-      if (approvedOwners.includes(email)) {
-        role = "owner";
-      }
-    }
-    const userData: User = {
-      id: 1,
-      name: email.split("@")[0],
+    const mockUser = {
+      id: "1",
+      name: "John Doe",
       email,
-      avatar: `https://ui-avatars.com/api/?name=${
-        email.split("@")[0]
-      }&background=4f46e5&color=fff`,
-      role,
+      role: "user" as const,
     };
-
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(mockUser);
+    localStorage.setItem("user", JSON.stringify(mockUser));
   };
 
   const register = async (name: string, email: string, password: string) => {
     // Simulate API call
-    let role: "customer" | "owner" | "admin" = "customer";
-    if (email === "admin@gmail.com") {
-      role = "admin";
-    } else if (email.includes("owner")) {
-      role = "owner";
-    }
-    const userData: User = {
-      id: Date.now(),
+    const mockUser = {
+      id: Date.now().toString(),
       name,
       email,
-      avatar: `https://ui-avatars.com/api/?name=${name}&background=4f46e5&color=fff`,
-      role,
+      role: "user" as const,
     };
-
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(mockUser);
+    localStorage.setItem("user", JSON.stringify(mockUser));
   };
 
   const logout = () => {
@@ -84,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
